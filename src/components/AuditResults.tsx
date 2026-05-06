@@ -1,26 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuditResult } from "@/lib/auditEngine";
+import { UserContext } from "@/lib/pricingData";
 
 interface Props {
   result: AuditResult;
+  context: UserContext;
   onReset: () => void;
 }
 
-export default function AuditResults({ result, onReset }: Props) {
+export default function AuditResults({ result, context, onReset }: Props) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [captured, setCaptured] = useState(false);
+  const [shareId, setShareId] = useState("");
+  const [summary, setSummary] = useState<string>("Generating personalized AI summary of your stack...");
+  
+  useEffect(() => {
+    // Generate AI Summary on mount
+    const fetchSummary = async () => {
+      try {
+        const res = await fetch('/api/generate-summary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tools: context.tools,
+            totalCurrentSpend: result.totalCurrentSpend,
+            totalPotentialSavings: result.totalPotentialSavings,
+          }),
+        });
+        const data = await res.json();
+        if (data.summary) {
+           setSummary(data.summary);
+        }
+      } catch (err) {
+        console.error("Failed to fetch summary", err);
+        setSummary("Your stack has been analyzed. See the breakdown below.");
+      }
+    };
+    fetchSummary();
+  }, [context, result]);
 
   const handleCapture = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call for lead capture
-    setTimeout(() => {
+    
+    try {
+      const res = await fetch('/api/capture-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          result: { ...result, summary }
+        }),
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setShareId(data.auditId);
+        setCaptured(true);
+      } else {
+        alert("Something went wrong saving the audit. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error.");
+    } finally {
       setIsSubmitting(false);
-      setCaptured(true);
-    }, 1000);
+    }
   };
 
   return (
@@ -31,6 +79,13 @@ export default function AuditResults({ result, onReset }: Props) {
         <div className="text-blue-100">
           That's <span className="font-semibold text-white">${(result.totalPotentialSavings * 12).toLocaleString()}</span> a year you could be reinvesting.
         </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">AI Executive Summary</h3>
+        <p className="text-gray-800 leading-relaxed italic border-l-4 border-blue-500 pl-4">
+          "{summary}"
+        </p>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -71,7 +126,7 @@ export default function AuditResults({ result, onReset }: Props) {
           <p className="text-gray-600 mb-6">
             {result.isHighSavings 
               ? "Book a free consultation with Credex to get discounted credits for your stack." 
-              : "Enter your email to get a PDF copy of this audit and an AI-generated summary of your stack."}
+              : "Enter your email to get a PDF copy of this audit and a shareable URL."}
           </p>
           <form onSubmit={handleCapture} className="max-w-md mx-auto flex gap-2">
             <input
@@ -95,8 +150,8 @@ export default function AuditResults({ result, onReset }: Props) {
         <div className="bg-green-50 rounded-xl p-8 border border-green-200 text-center">
           <h3 className="text-xl font-semibold text-green-800 mb-2">Report Sent!</h3>
           <p className="text-green-600 mb-4">Check your inbox for the full details and shareable link.</p>
-          <div className="inline-block bg-white p-3 rounded border border-green-200 text-sm text-gray-500">
-            Share URL: https://credex-audit.demo/audit/{crypto.randomUUID().split('-')[0]}
+          <div className="inline-block bg-white p-3 rounded border border-green-200 text-sm text-gray-500 select-all">
+            Share URL: {window.location.origin}/audit/{shareId}
           </div>
         </div>
       )}
