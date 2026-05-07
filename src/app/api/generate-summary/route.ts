@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     console.error('Anthropic API error:', error);
     // Graceful fallback on error
     return NextResponse.json({ 
-       summary: `Your stack has been analyzed. You have potential savings of $${totalPotentialSavings}/mo. Check the breakdown for details.` 
+       summary: `Your stack has been analyzed. Please check the breakdown for details on your potential savings.` 
     });
   }
 }

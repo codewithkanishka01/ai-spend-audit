@@ -8,9 +8,11 @@ import { runAudit, AuditResult } from "@/lib/auditEngine";
 
 export default function Home() {
   const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
+  const [userContext, setUserContext] = useState<UserContext | null>(null);
 
   const handleAudit = (context: UserContext) => {
     const result = runAudit(context);
+    setUserContext(context);
     setAuditResult(result);
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -38,7 +40,7 @@ export default function Home() {
             <SpendInputForm onAudit={handleAudit} />
           </div>
         ) : (
-          <AuditResults result={auditResult} onReset={resetAudit} />
+          <AuditResults result={auditResult} context={userContext!} onReset={resetAudit} />
         )}
 
       </div>
