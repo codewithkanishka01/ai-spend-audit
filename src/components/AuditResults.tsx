@@ -77,14 +77,14 @@ export default function AuditResults({ result, context, onReset }: Props) {
         <h2 className="text-2xl font-medium text-blue-100 mb-2">Total Potential Savings</h2>
         <div className="text-5xl font-bold mb-4">${result.totalPotentialSavings.toLocaleString()}<span className="text-xl font-normal text-blue-200">/mo</span></div>
         <div className="text-blue-100">
-          That's <span className="font-semibold text-white">${(result.totalPotentialSavings * 12).toLocaleString()}</span> a year you could be reinvesting.
+          That&apos;s <span className="font-semibold text-white">${(result.totalPotentialSavings * 12).toLocaleString()}</span> a year you could be reinvesting.
         </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">AI Executive Summary</h3>
         <p className="text-gray-800 leading-relaxed italic border-l-4 border-blue-500 pl-4">
-          "{summary}"
+          &quot;{summary}&quot;
         </p>
       </div>
 

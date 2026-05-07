@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { runAudit } from './auditEngine';
-import { UserContext, UserToolInput } from './pricingData';
+import { UserContext } from './pricingData';
 
 describe('Audit Engine', () => {
   it('should recommend downgrading Team plan for small team', () => {

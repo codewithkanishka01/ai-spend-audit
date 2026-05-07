@@ -17,8 +17,12 @@ export default function SpendInputForm({ onAudit }: Props) {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.teamSize) setTeamSize(parsed.teamSize);
-        if (parsed.tools) setTools(parsed.tools);
+        if (parsed.teamSize) {
+          setTimeout(() => setTeamSize(parsed.teamSize), 0);
+        }
+        if (parsed.tools) {
+          setTimeout(() => setTools(parsed.tools), 0);
+        }
       } catch (e) {
         console.error("Failed to parse saved state", e);
       }
@@ -105,7 +109,7 @@ export default function SpendInputForm({ onAudit }: Props) {
 
         {tools.length === 0 && (
           <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
-            No tools added yet. Click "+ Add Tool" to start.
+            No tools added yet. Click &quot;+ Add Tool&quot; to start.
           </div>
         )}
 

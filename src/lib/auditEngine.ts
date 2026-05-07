@@ -1,4 +1,4 @@
-import { UserContext, UserToolInput, TOOLS_DATA, ToolName, PlanTier } from "./pricingData";
+import { UserContext, TOOLS_DATA, ToolName } from "./pricingData";
 
 export interface AuditRecommendation {
   toolId: string;

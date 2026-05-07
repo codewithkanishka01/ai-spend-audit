@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 export const revalidate = 60; // Cache for 60 seconds
 
@@ -50,7 +51,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">AI Executive Summary</h3>
              <p className="text-gray-800 leading-relaxed italic border-l-4 border-blue-500 pl-4">
-               "{result.summary}"
+               &quot;{result.summary}&quot;
              </p>
            </div>
         )}
@@ -60,7 +61,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
             <h3 className="text-xl font-semibold text-gray-900">Per-Tool Breakdown</h3>
           </div>
           <div className="divide-y divide-gray-100">
-            {result.recommendations?.map((rec: any, i: number) => (
+            {result.recommendations?.map((rec: { toolName: string; savings: number; recommendedAction: string }, i: number) => (
               <div key={i} className="p-6">
                 <div className="flex justify-between items-start mb-2">
                   <div className="font-medium text-lg text-gray-900">{rec.toolName}</div>
@@ -83,9 +84,9 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
         </div>
 
         <div className="text-center mt-12">
-          <a href="/" className="inline-block px-6 py-3 bg-white text-blue-600 font-medium rounded-md shadow-sm border border-gray-200 hover:bg-gray-50">
+          <Link href="/" className="inline-block px-6 py-3 bg-white text-blue-600 font-medium rounded-md shadow-sm border border-gray-200 hover:bg-gray-50">
             Run Your Own Audit
-          </a>
+          </Link>
         </div>
       </div>
     </main>

@@ -29,7 +29,7 @@ export default function Home() {
             Stop Overpaying for AI Tools
           </h1>
           <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
-            Get an instant audit of your startup's AI spend. Discover cheaper plans, better alternatives, and hidden savings in 30 seconds.
+            Get an instant audit of your startup&apos;s AI spend. Discover cheaper plans, better alternatives, and hidden savings in 30 seconds.
           </p>
         </div>
 

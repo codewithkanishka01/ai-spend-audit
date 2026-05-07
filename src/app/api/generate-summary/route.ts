@@ -19,7 +19,7 @@ export async function POST(req: Request) {
        });
     }
 
-    const toolDescriptions = tools.map((t: any) => `${t.toolName} (${t.plan} plan, ${t.seats} seats) for ${t.useCase}`).join(', ');
+    const toolDescriptions = tools.map((t: { toolName: string; plan: string; seats: number; useCase: string }) => `${t.toolName} (${t.plan} plan, ${t.seats} seats) for ${t.useCase}`).join(', ');
 
     const prompt = `You are a financial advisor for a startup. They currently use the following AI tools: ${toolDescriptions}. 
     They are spending a total of $${totalCurrentSpend} per month, but our audit engine found they could save $${totalPotentialSavings} per month by optimizing.
